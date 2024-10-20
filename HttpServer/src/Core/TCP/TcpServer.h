@@ -1,8 +1,8 @@
 #ifndef TCP_SERVER_H
 #define TCP_SERVER_H
 
-#include "../Core/Socket.hpp"
-#include "../Core/ThreadPool.hpp"
+#include "../Socket/Socket.hpp"
+#include "../ThreadPool/ThreadPool.hpp"
 
 namespace http {
 	class TcpServer {

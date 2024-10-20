@@ -18,24 +18,39 @@
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Core\TcpServer.cpp">
+    <ClCompile Include="src\Core\TCP\TcpServer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Core\TCP\RequestHandler.hpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Core\TcpServer.h">
+    <ClInclude Include="src\Core\TCP\TcpServer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Core\SocketLibrary.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Core\WinsockLibrary.hpp">
+    <ClInclude Include="src\Core\Socket\WinsockLibrary.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Core\ThreadPool.hpp">
+    <ClInclude Include="src\Core\ThreadPool\ThreadPool.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Core\Socket.hpp">
+    <ClInclude Include="src\Core\Socket\Socket.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\TCP\HttpRequest.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\TCP\HttpResponse.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\TCP\Parser.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\TCP\MyRequestHandler.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

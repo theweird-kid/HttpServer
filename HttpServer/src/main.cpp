@@ -1,7 +1,7 @@
 #include <iostream>
 
-#include "Core/WinsockLibrary.hpp"
-#include "Core/TcpServer.h" 
+#include "Core/Socket/WinsockLibrary.hpp"
+#include "Core/TCP/TcpServer.h" 
 
 int main() {
 	std::cout << "Hello, World!" << std::endl;

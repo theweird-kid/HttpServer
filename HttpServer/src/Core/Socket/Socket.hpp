@@ -80,21 +80,7 @@ public:
 			mSocket = INVALID_SOCKET;
 		}
 	}
-
-	// Handle HTTP request
-	void HandleRequest() const noexcept 
-	{
-		char buffer[1024];
-		int bytesReceived = recv(mSocket, buffer, sizeof(buffer), 0);
-		if (bytesReceived > 0) {
-			std::string request(buffer, bytesReceived);
-			std::cout << "Received request:\n" << request << std::endl;
-
-			// Simple HTTP response
-			std::string response = "HTTP/1.1 200 OK\r\nContent-Length: 13\r\n\r\nHello, World!";
-			send(mSocket, response.c_str(), static_cast<int>(response.size()), 0);
-		}
-	}
+	
 
 	// Private constructor to accept SOCKET type
 	Socket(SOCKET socket) noexcept : mSocket{ socket } {}

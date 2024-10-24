@@ -2,8 +2,7 @@
 #define THREADPOOL_HPP
 
 #include "../Socket/Socket.hpp"
-#include "../TCP/Parser.hpp"
-#include "../TCP/MyRequestHandler.hpp"
+#include "../TCP/RequestHandler.hpp"
 
 #include <optional>
 #include <thread>
@@ -14,25 +13,27 @@
 
 class ThreadPool {
 public:
-    
-    ThreadPool(size_t numThreads) {
-         for (size_t i = 0; i < numThreads; ++i) {
+
+    ThreadPool(size_t numThreads, RequestHandler& reqHandler)
+		: requestHandler{ reqHandler }, stop{ false }
+    {
+        for (size_t i = 0; i < numThreads; ++i) {
             workers.emplace_back([this] {
                 while (true) {
-                    std::optional<MyRequestHandler> clientHandler;
+                    std::optional<Socket> clientSocket;
                     {
                         std::unique_lock<std::mutex> lock(queueMutex);
                         condition.wait(lock, [this] { return !tasks.empty() || stop; });
                         if (stop && tasks.empty()) return;
-                        clientHandler.emplace(std::move(tasks.front()));
+                        clientSocket.emplace(std::move(tasks.front()));
                         tasks.pop();
                     }
-                    if (clientHandler) {
-                        clientHandler->handleRequest();
+                    if (clientSocket->Get() != INVALID_SOCKET) {
+						requestHandler.handleRequest(std::move(*clientSocket));
                     }
                 }
-            });
-         }
+                });
+        }
     }
 
     ~ThreadPool() {
@@ -46,10 +47,10 @@ public:
         }
     }
 
-    void Enqueue(MyRequestHandler clientHandler) {
+    void Enqueue(Socket clientSocket) {
         {
             std::unique_lock<std::mutex> lock(queueMutex);
-            tasks.push(std::move(clientHandler));
+            tasks.push(std::move(clientSocket));
         }
         condition.notify_one();
     }
@@ -57,9 +58,10 @@ public:
 private:
 
     std::vector<std::thread> workers;
-    std::queue<MyRequestHandler> tasks;
+    std::queue<Socket> tasks;
     std::mutex queueMutex;
     std::condition_variable condition;
+	RequestHandler& requestHandler;
     bool stop = false;
 };
 

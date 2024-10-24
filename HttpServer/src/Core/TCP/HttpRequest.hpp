@@ -2,13 +2,13 @@
 #define HTTP_REQUEST_HPP
 
 #include <string>
+#include <map>
 
-class HttpRequest
-{
+class HttpRequest {
 public:
 	// Constructor
-	HttpRequest(const std::string& method, const std::string& uri, const std::string& version, const std::string& body)
-		: mMethod{ method }, mUri{ uri }, mVersion{ version }, mBody{ body }
+	HttpRequest(const std::string& method, const std::string& uri, const std::string& version, const std::map<std::string, std::string>& headers, const std::string& body)
+		: mMethod{ method }, mUri{ uri }, mVersion{ version }, mHeaders{ headers }, mBody{ body }
 	{}
 
 	// Get the method
@@ -29,22 +29,22 @@ public:
 		return mVersion;
 	}
 
+	// Get the headers
+	std::map<std::string, std::string> GetHeaders() const noexcept
+	{
+		return mHeaders;
+	}
+
 	// Get the body
 	std::string GetBody() const noexcept
 	{
 		return mBody;
 	}
-private:
-	// Request method
+
 	std::string mMethod;
-
-	// Request URI
 	std::string mUri;
-
-	// Request version
 	std::string mVersion;
-
-	// Request body
+	std::map<std::string, std::string> mHeaders;
 	std::string mBody;
 };
 

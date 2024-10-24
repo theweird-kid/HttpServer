@@ -3,12 +3,19 @@
 
 #include "../Socket/Socket.hpp"
 #include "../ThreadPool/ThreadPool.hpp"
+#include "./Router/Router.hpp"
+
+#include "./RequestHandler.hpp"
+#include "./HttpResponse.hpp"
 
 namespace http {
+
+	using handler = std::function<void(HttpRequest&, HttpResponse&)>;
+
 	class TcpServer {
 	public:
 		// Constructor
-		TcpServer();
+		TcpServer(Router router);
 
 		// Destructor
 		~TcpServer();
@@ -20,11 +27,17 @@ namespace http {
 		void stop();
 
 	private:
+		// Handle incoming requests
+		void handleClient(Socket clientSocket);
+
 		// Socket object
 		Socket mSocket;
 
 		// Thread pool
 		ThreadPool mThreadPool;	
+
+		// RequestHandler object
+		RequestHandler mRequestHandler;
 	};
 }
 

@@ -24,6 +24,9 @@ public:
 		IPV6 = AF_INET6
 	};
 
+	// Default constructor
+	Socket() {}
+
 	// Constructor
 	Socket(const Type type, const AddressFamily addressFamily = AddressFamily::IPV4)
 		: mSocket{ CreateSocket(type, static_cast<int>(addressFamily)) }
@@ -33,7 +36,6 @@ public:
 			throw std::system_error(WSAGetLastError(), std::system_category());
 		}
 	}
-
 
 	// Destructor
 	~Socket() noexcept
@@ -71,6 +73,12 @@ public:
 		return Socket{ std::move(clientSocket) };
 	}
 
+	// Send data
+	int Send(const std::string& data) const noexcept
+	{
+		return send(mSocket, data.c_str(), static_cast<int>(data.size()), 0);
+	}
+
 	// Close the socket
 	void Close() noexcept 
 	{
@@ -80,7 +88,7 @@ public:
 			mSocket = INVALID_SOCKET;
 		}
 	}
-	
+
 
 	// Private constructor to accept SOCKET type
 	Socket(SOCKET socket) noexcept : mSocket{ socket } {}

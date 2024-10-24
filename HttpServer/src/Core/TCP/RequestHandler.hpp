@@ -1,26 +1,24 @@
-#include <utility>
-#include "../Socket/Socket.hpp"
+#ifndef REQUEST_HANDLER_HPP
+#define REQUEST_HANDLER_HPP
 
-class RequestHandler {
+#include "./Router/Parser.hpp"
+#include "./Router/Router.hpp"
+
+class RequestHandler  {
 public:
-    // disable copy constructor
-    RequestHandler(const Socket&) = delete;
 
-    // disable copy operator
-    RequestHandler& operator = (const Socket&) = delete;
+    RequestHandler() { /* Default Constructor */ }
+   
+	RequestHandler(Router router) : mRouter{ router } {}
 
-    RequestHandler(RequestHandler&& other) noexcept
-        : mClientSocket(std::exchange(other.mClientSocket, INVALID_SOCKET)) {
+    // Handle HTTP request
+    void handleRequest(Socket clientSocket) {
+        
+		mRouter.route(clientSocket);
     }
-    RequestHandler& operator=(const RequestHandler&) = default;
-    RequestHandler& operator=(RequestHandler&& other) noexcept {
-        if (this != &other) {
-            mClientSocket = std::exchange(other.mClientSocket, INVALID_SOCKET);
-        }
-        return *this;
-    }
-    virtual void handleRequest() = 0;
-    virtual ~RequestHandler() = default;
+
 private:
-    Socket mClientSocket{ INVALID_SOCKET };
+	Router mRouter;
 };
+
+#endif // !REQUEST_HANDLER_HPP

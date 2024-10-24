@@ -6,6 +6,9 @@
 class HttpResponse
 {
 public:
+	// Default Constructor
+	HttpResponse() = default;
+
 	// Status codes
 	enum class StatusCode
 	{
@@ -49,12 +52,34 @@ public:
 		return response;
 	}
 
+	// Set the status code
+	void SetStatus(const StatusCode statusCode) noexcept
+	{
+		mStatusCode = statusCode;
+	}
+
+	// Set the Header
+	void SetHeader(const std::string& key, const std::string& value) noexcept
+	{
+		mHeader += key + ": " + value + "\r\n";
+	}
+
+	// Set the Body
+	void SetBody(const std::string& body) noexcept
+	{
+		mBody = body;
+	}
+
 private:
 	// Status code
 	StatusCode mStatusCode;
 
 	// Response body
 	std::string mBody;
+
+	// Header
+	std::string mHeader;
+	
 };
 
 #endif // !HTTP_RESPONSE_HPP

@@ -155,7 +155,9 @@
     <ClCompile Include="src\Core\TCP\TcpServer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\json.hpp" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="include\color.hpp" />
     <ClInclude Include="src\Core\TCP\Router\Router.hpp" />
     <ClInclude Include="src\Core\Socket\Socket.hpp" />
     <ClInclude Include="src\Core\SocketLibrary.h" />
@@ -169,6 +171,9 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="HttpServer.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

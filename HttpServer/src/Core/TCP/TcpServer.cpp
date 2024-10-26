@@ -21,7 +21,6 @@ namespace http {
 		mSocket.Bind("127.0.0.1", port);
 
 		// Listen for incoming connections
-		std::printf("Listening on port %d..\n", port);
 		mSocket.Listen();
 
 		while (true) {

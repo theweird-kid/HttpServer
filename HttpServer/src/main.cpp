@@ -3,9 +3,12 @@
 
 #include "json.hpp"
 
+#include "color.hpp"
 #include "Core/Socket/WinsockLibrary.hpp"
 #include "Core/TCP/Router/Router.hpp"
 #include "Core/TCP/TcpServer.h" 
+
+#define PORT 8080
 
 using JSON = nlohmann::json;
 
@@ -13,8 +16,6 @@ int main()
 {
 	// Enable memory leak detection
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-
-	std::cout << "Hello, World!" << std::endl;
 
 	NET::WinsockLibrary winsock{ std::nothrow };
 
@@ -39,10 +40,13 @@ int main()
 		resp.SetBody(w.dump());
 	});
 
+	
 	// Create a TCP server
 	http::TcpServer server{router};
+
 	// Listen on port 8080
-	server.start(8080);
+	std::cout << MAGENTA << "Listening on port " << PORT << RESET << std::endl;
+	server.start(PORT);
 
 	return 0;
 }

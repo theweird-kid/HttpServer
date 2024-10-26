@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Socket" Collapsed="true">
+    <Position X="8" Y="4.75" Width="1.5" />
+    <NestedTypes>
+      <Enum Name="Socket::Type" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>src\Core\Socket\Socket.hpp</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+      <Enum Name="Socket::AddressFamily" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>src\Core\Socket\Socket.hpp</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AIAAgAAAEAAAAEBgAEAAAAAAAAAAAQEAAAAgAACAAAA=</HashCode>
+      <FileName>src\Core\Socket\Socket.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ThreadPool" Collapsed="true">
+    <Position X="2" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAICCAAAAAAAAEAAAAAAAAAAgACgAAABAAAAAAAA=</HashCode>
+      <FileName>src\Core\ThreadPool\ThreadPool.hpp</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="requestHandler" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Router" Collapsed="true">
+    <Position X="5" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAQAAAAAAAACABAAAIAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>src\Core\TCP\Router\Router.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RequestParser" Collapsed="true">
+    <Position X="7.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgBAAAAAAIIAAAAAAEAAAAEAAAAAAAAAAAAIAA=</HashCode>
+      <FileName>src\Core\TCP\Router\Parser.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RequestHandler" Collapsed="true">
+    <Position X="5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEAAAAAAAAAAQBAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>src\Core\TCP\RequestHandler.hpp</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="mRouter" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="HttpResponse" Collapsed="true">
+    <Position X="9.75" Y="1.5" Width="1.5" />
+    <NestedTypes>
+      <Enum Name="HttpResponse::StatusCode" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>src\Core\TCP\HttpResponse.hpp</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAQAABAAAAAAAAAAABAAAQAAEAQAAAAAAAAEAAAA=</HashCode>
+      <FileName>src\Core\TCP\HttpResponse.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HttpRequest" Collapsed="true">
+    <Position X="7.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABgDAACAAAIIKEAAAAAAAAAEAAIAAAAAAAAAAAA=</HashCode>
+      <FileName>src\Core\TCP\HttpRequest.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="http::TcpServer">
+    <Position X="5" Y="4.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="mRequestHandler" Type="RequestHandler">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-1.54" Y="0.16" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAAAAggAAAAAAAAAAgAAEAAIEAAAIAAAA=</HashCode>
+      <FileName>src\Core\TCP\TcpServer.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="mRequestHandler" />
+      <Field Name="mThreadPool" />
+      <Field Name="mSocket" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="NET::WinsockLibrary" Collapsed="true">
+    <Position X="9.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAEAAAAAQAAAAAEAAAAAAAAAAAABAAEAAAgAAAAAAQ=</HashCode>
+      <FileName>src\Core\Socket\WinsockLibrary.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

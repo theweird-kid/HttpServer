@@ -6,6 +6,8 @@
 #include "../HttpRequest.hpp"
 #include "../HttpResponse.hpp"
 
+#include "color.hpp"
+
 #include <iostream>
 #include <chrono>
 #include <map>
@@ -104,11 +106,23 @@ private:
 
         // Log the time and request details
 		auto headers = req.GetHeaders();
-        std::cout << timeStream.str() << " " << req.GetMethod() << " " << req.GetUri() << std::endl;
-		for (const auto& header : headers) {
-			std::cout << header.first << ": " << header.second << std::endl;
+        std::cout << timeStream.str() << " ";
+		if (req.GetMethod() == "GET") {
+			std::cout << GREEN << req.GetMethod() << RESET << " ";
 		}
-
+		else if (req.GetMethod() == "POST") {
+			std::cout << BLUE << req.GetMethod() << RESET << " ";
+		}
+		else if (req.GetMethod() == "PUT") {
+			std::cout << YELLOW << req.GetMethod() << RESET << " ";
+		}
+		else if (req.GetMethod() == "DELETE") {
+			std::cout << RED << req.GetMethod() << RESET << " ";
+		}
+		else {
+			std::cout << req.GetMethod() << " ";
+		}
+		std::cout << req.GetUri() << std::endl;
     }
 };
 

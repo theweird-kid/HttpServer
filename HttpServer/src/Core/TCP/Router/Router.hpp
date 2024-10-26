@@ -34,7 +34,24 @@ public:
 			HttpRequest req = RequestParser().parse(request);
             HttpResponse resp;
 
+            // Add CORS headers
+            resp.SetHeader("Access-Control-Allow-Origin", "*");
+            resp.SetHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+            resp.SetHeader("Access-Control-Allow-Headers", "Content-Type");
+
+
             log(req);
+
+            if (req.GetMethod() == "OPTIONS") {
+                resp.SetStatus(HttpResponse::StatusCode::Ok);
+                resp.SetHeader("Access-Control-Allow-Origin", "*");
+                resp.SetHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+                resp.SetHeader("Access-Control-Allow-Headers", "Content-Type");
+                resp.SetHeader("Access-Control-Max-Age", "86400");
+                resp.SetHeader("Content-Length", "0");
+                resp.SetBody("");
+                return;
+            }
 
             if (routes.find(req.GetUri()) != routes.end())
             {
@@ -42,29 +59,35 @@ public:
 
 				// Encode the response
                 std::string response = resp.GetResponse();
-                sendResponse(clientSocket, response);
+                sendResponse(clientSocket, response, true); // Close the connection   
             }
             else
             {
                 std::string response = "HTTP/1.1 404 Not Found\r\nContent-Type: text/plain\r\nContent-Length: 9\r\n\r\nNot Found";
-                sendResponse(clientSocket, response);
+                sendResponse(clientSocket, response, true);
             }
 
         }
         else
         {
 			std::string response = "HTTP/1.1 404 Not Found\r\nContent-Type: text/plain\r\nContent-Length: 9\r\n\r\nNot Found";
-			sendResponse(clientSocket, response);
+			sendResponse(clientSocket, response, true);
+            
         }
     }
 
 private:
     std::map<std::string, std::function<void(HttpRequest&, HttpResponse&)>> routes;
 
-    static void sendResponse(Socket& clientSocket, const std::string& response) {
+    static void sendResponse(Socket& clientSocket, const std::string& response, bool closeConnection) {
         if (clientSocket.Get() != INVALID_SOCKET) {
             clientSocket.Send(response);
-            clientSocket.Close();
+			if (closeConnection) {
+				clientSocket.Close();
+			}
+        }
+        else {
+			std::cerr << "Failed to send response" << std::endl;
         }
     }
 
@@ -80,7 +103,11 @@ private:
         timeStream << std::put_time(&timeInfo, "%Y-%m-%d %H:%M:%S");
 
         // Log the time and request details
+		auto headers = req.GetHeaders();
         std::cout << timeStream.str() << " " << req.GetMethod() << " " << req.GetUri() << std::endl;
+		for (const auto& header : headers) {
+			std::cout << header.first << ": " << header.second << std::endl;
+		}
 
     }
 };

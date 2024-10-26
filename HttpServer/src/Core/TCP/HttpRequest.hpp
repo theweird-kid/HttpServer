@@ -41,6 +41,12 @@ public:
 		return mBody;
 	}
 
+	// Get the header
+	std::string GetHeader(const std::string& key) const noexcept
+	{
+		return mHeaders.at(key);
+	}
+
 	std::string mMethod;
 	std::string mUri;
 	std::string mVersion;

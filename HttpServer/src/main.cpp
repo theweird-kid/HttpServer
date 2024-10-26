@@ -1,9 +1,13 @@
 #include <iostream>
-#include <functional> // Include this header for std::function
+#include <functional> 
+
+#include "json.hpp"
 
 #include "Core/Socket/WinsockLibrary.hpp"
 #include "Core/TCP/Router/Router.hpp"
 #include "Core/TCP/TcpServer.h" 
+
+using JSON = nlohmann::json;
 
 int main()
 {
@@ -18,20 +22,26 @@ int main()
 
 	// Register the route with a lambda function
 	router.addRoute("/hello", [](HttpRequest& req, HttpResponse& resp) {
-		resp.SetStatus(HttpResponse::StatusCode::Ok);
-		resp.SetHeader("Content-Type", "text/plain");
-		resp.SetBody("Hello, World!");
+        resp.SetStatus(HttpResponse::StatusCode::Ok);
+        resp.SetHeader("Content-Type", "application/json");
+        JSON w = {
+        {"message", "Hello, World!"}
+        };
+        resp.SetBody(w.dump());
 	});
 
 	router.addRoute("/bye", [](HttpRequest& req, HttpResponse& resp) {
 		resp.SetStatus(HttpResponse::StatusCode::Ok);
-		resp.SetHeader("Content-Type", "text/plain");
-		resp.SetBody("Bye, World!");
+		resp.SetHeader("Content-Type", "application/json");
+		JSON w = {
+		{"message", "Bye, World!"}
+		};
+		resp.SetBody(w.dump());
 	});
 
 	// Create a TCP server
 	http::TcpServer server{router};
-
+	// Listen on port 8080
 	server.start(8080);
 
 	return 0;

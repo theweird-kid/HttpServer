@@ -2,7 +2,7 @@
 
 namespace http {
 
-	static constexpr uint16_t threadPoolSize{ 4 };
+	static constexpr uint16_t threadPoolSize{ 8 };
 
 	TcpServer::TcpServer(Router router) : mSocket{ Socket::Type::Tcp, Socket::AddressFamily::IPV4 },
 		mRequestHandler{ router },

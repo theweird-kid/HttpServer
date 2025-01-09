@@ -10,12 +10,12 @@
 #include <mutex>
 #include <queue>
 #include <condition_variable>
+#include <iostream>
 
 class ThreadPool {
 public:
-
     ThreadPool(size_t numThreads, RequestHandler& reqHandler)
-		: requestHandler{ reqHandler }, stop{ false }
+        : requestHandler{ reqHandler }, stop{ false }
     {
         for (size_t i = 0; i < numThreads; ++i) {
             workers.emplace_back([this] {
@@ -29,10 +29,14 @@ public:
                         tasks.pop();
                     }
                     if (clientSocket->Get() != INVALID_SOCKET) {
-						requestHandler.handleRequest(std::move(*clientSocket));
+                        try {
+                            requestHandler.handleRequest(std::move(*clientSocket));
+                        } catch (const std::exception& e) {
+                            std::cerr << "Error handling request: " << e.what() << std::endl;
+                        }
                     }
                 }
-                });
+            });
         }
     }
 
@@ -56,13 +60,12 @@ public:
     }
 
 private:
-
     std::vector<std::thread> workers;
     std::queue<Socket> tasks;
     std::mutex queueMutex;
     std::condition_variable condition;
-	RequestHandler& requestHandler;
-    bool stop = false;
+    RequestHandler& requestHandler;
+    bool stop;
 };
 
 #endif // THREADPOOL_HPP

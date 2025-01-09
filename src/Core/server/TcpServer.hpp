@@ -1,44 +1,98 @@
-#ifndef TCP_SERVER_HPP
-#define TCP_SERVER_HPP
+#ifndef TCPSERVER_HPP
+#define TCPSERVER_HPP
 
+#include "../router/Router.hpp"
 #include "../socket/Socket.hpp"
 #include "../threadPool/ThreadPool.hpp"
-#include "../router/Router.hpp"
-
-#include "../utils/RequestHandler.hpp"
-#include "../utils/HttpResponse.hpp"
+#include <thread>
+#include <chrono>
+#include <iostream>
 
 namespace http {
 
-	using handler = std::function<void(HttpRequest&, HttpResponse&)>;
+class TcpServer {
+public:
+    TcpServer(Router router);
+    ~TcpServer();
 
-	class TcpServer {
-	public:
-		// Constructor
-		TcpServer(Router router);
+    void start(uint16_t port);
+    void stop();
 
-		// Destructor
-		~TcpServer();
+private:
+    void handleClient(Socket clientSocket);
 
-		// Run the server
-		void start(uint16_t port);
+    Socket mSocket;
+    RequestHandler mRequestHandler;
+    ThreadPool mThreadPool;
+    static constexpr uint16_t threadPoolSize{ 8 };
+};
 
-		// Stop the server
-		void stop();
-
-	private:
-		// Handle incoming requests
-		void handleClient(Socket clientSocket);
-
-		// Socket object
-		Socket mSocket;
-
-		// Thread pool
-		ThreadPool mThreadPool;
-
-		// RequestHandler object
-		RequestHandler mRequestHandler;
-	};
+TcpServer::TcpServer(Router router)
+    : mSocket{ Socket::Type::Tcp, Socket::AddressFamily::IPV4 },
+      mRequestHandler{ router },
+      mThreadPool{ threadPoolSize, mRequestHandler }
+{
+    // Initialize Socket, Router and ThreadPool
 }
 
-#endif // !TCP_SERVER_H
+TcpServer::~TcpServer() {
+    // Stop the server
+    stop();
+}
+
+void TcpServer::start(uint16_t port) {
+    // Bind the socket to the port
+    mSocket.Bind("127.0.0.1", port);
+
+    // Listen for incoming connections
+    mSocket.Listen();
+
+    while (true) {
+        // Accept incoming connections
+        Socket clientSocket = mSocket.Accept();
+
+        if (clientSocket.Get() != INVALID_SOCKET) {
+            // Enqueue the task
+            mThreadPool.Enqueue(std::move(clientSocket));
+        }
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
+}
+
+void TcpServer::handleClient(Socket clientSocket) {
+    // Handle Client
+    //mRouter.routeRequest(std::move(clientSocket));
+
+    constexpr int bufferSize = 1024;
+    char buffer[bufferSize];
+    int bytesReceived = recv(clientSocket.Get(), buffer, bufferSize - 1, 0);
+
+    if (bytesReceived > 0) {
+        buffer[bytesReceived] = '\0';
+        std::string request(buffer);
+
+        // Get the method and URI from the request
+        std::cout << "Request Received" << std::endl;
+
+        // Send a 404 response
+        std::string response = "HTTP/1.1 404 Hello World\r\nContent-Type: text/plain\r\nContent-Length: 9\r\n\r\nNot Found";
+        send(clientSocket.Get(), response.c_str(), static_cast<int>(response.size()), 0);
+
+        clientSocket.Close();
+    } else {
+        std::string response = "HTTP/1.1 404 Not Found\r\nContent-Type: text/plain\r\nContent-Length: 9\r\n\r\nNot Found";
+        send(clientSocket.Get(), response.c_str(), static_cast<int>(response.size()), 0);
+
+        clientSocket.Close();
+    }
+}
+
+void TcpServer::stop() {
+    // Stop the server
+    mSocket.Close();
+}
+
+} // namespace http
+
+#endif // TCPSERVER_HPP
